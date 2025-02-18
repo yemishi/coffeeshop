@@ -5,14 +5,17 @@ import { hashSync } from "bcrypt"
 
 export async function GET(req: NextRequest) {
     const email = req.nextUrl.searchParams.get("email") as string
-    const userId = req.nextUrl.searchParams.get("userId") as string
+    const userId = req.nextUrl.searchParams.get("id") as string
 
     try {
         const field = email ? { email } : { id: userId }
         const user = await db.user.findFirst({ where: field, omit: { password: true } })
+        if (!user) return NextResponse.json({ message: "user not found." }, { status: 404 })
+            
         return NextResponse.json({ user, message: "user information retrieved successfully." }, { status: 200 })
     } catch (error) {
         return NextResponse.json({ message: "Failed to fetch user information." }, { status: 500 });
+
     }
 }
 export async function POST(req: NextRequest) {
