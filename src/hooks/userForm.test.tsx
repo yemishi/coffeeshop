@@ -3,7 +3,7 @@ import useForm from "./useForm";
 
 describe("useForm hook", () => {
     const initialValues = {
-        username: { value: "", min: { value: 3, msg: "Too short" } },
+        username: { value: "", min: 3, minMessage: "Too short" },
         email: { value: "", isEmail: true },
         password: { value: "" },
         confirmPassword: { value: "", compareField: "password" },
@@ -26,6 +26,10 @@ describe("useForm hook", () => {
             result.current.setValue("username", "Jo");
         });
 
+        act(() => {
+            result.current.validateAll();
+        });
+
         expect(result.current.values.username).toBe("Jo");
         expect(result.current.errors.username).toBe("Too short");
     });
@@ -35,6 +39,10 @@ describe("useForm hook", () => {
 
         act(() => {
             result.current.setValue("email", "invalid-email");
+        });
+
+        act(() => {
+            result.current.validateAll();
         });
 
         expect(result.current.errors.email).toBe("Invalid email format.");
@@ -54,6 +62,21 @@ describe("useForm hook", () => {
 
         expect(result.current.errors.username).toBe("Too short");
         expect(result.current.errors.email).toBe("Invalid email format.");
+    });
+
+    test("should validate password confirmation", () => {
+        const { result } = renderHook(() => useForm(initialValues));
+
+        act(() => {
+            result.current.setValue("password", "securePass123");
+            result.current.setValue("confirmPassword", "wrongPass");
+        });
+
+        act(() => {
+            result.current.validateAll();
+        });
+
+        expect(result.current.errors.confirmPassword).toBe("Must be equal to password");
     });
 
     test("should reset form correctly", () => {

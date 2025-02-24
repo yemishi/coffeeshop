@@ -1,9 +1,10 @@
 
-export default function Page() {
 
+export default async function  Page() {
   return (
-    <div>
+    <div className="">
       I am home!
+
     </div >
   );
 }

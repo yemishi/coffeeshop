@@ -41,11 +41,11 @@ export const authOptions: NextAuthOptions = {
                     where: { OR: [{ name: name }, { email: name }] }
                 });
 
-                if (!user) return null;
-          
+                if (!user) throw new Error("User not found");;
+
                 const checkPass = await compare(password, user.password as string);
-            
-                if (!checkPass) return null;
+
+                if (!checkPass) throw new Error("Password invalid");
                 const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET as string);
 
                 (await cookies()).set({
@@ -67,7 +67,6 @@ export const authOptions: NextAuthOptions = {
 
     callbacks: {
         async jwt({ token, trigger, session, user }) {
-            console.log("AAAAA")
             if (user) {
                 const customUser = user as UserToken
                 token.id = customUser.id;

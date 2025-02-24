@@ -1,20 +1,17 @@
 import { useMemo, useState } from "react"
 
-interface ValidationRule {
-    value?: number;
-    msg: string;
-}
-
-interface Field {
+export interface FormField {
     value: string | number;
-    min?: ValidationRule;
-    max?: ValidationRule;
-    compareField?: string
-    isEmail?: boolean
+    min?: number;
+    max?: number;
+    maxMessage?: string;
+    minMessage?: string;
+    compareField?: string;
+    isEmail?: boolean;
     validate?: (value: string | number) => string | null;
 }
 
-type FormFields = Record<string, Field>
+type FormFields = Record<string, FormField>
 
 export default function useForm(initialValues: FormFields) {
 
@@ -26,19 +23,31 @@ export default function useForm(initialValues: FormFields) {
 
     const handleError = (field: string, msg: string | null) => setErrors((e) => ({ ...e, [field]: msg }))
     const validateField = (name: string, value: string | number | string[]): string | null => {
+
         const field = fields[name];
         if (!field) return null;
 
-        const { compareField, max, min, validate, isEmail } = field;
-        const len = typeof (value) === "number" ? value : value.length
-        if (max && len > max.value!) return max.msg;
-        if (min && len < min.value!) return min.msg;
+        const { compareField, max, min, validate, isEmail, minMessage, maxMessage } = field;
+        const isNumberField = !isNaN(parseFloat(value as string));
+        const len = isNumberField ? Number(value) : (value as string).length
+        if (max && len > max!) {
+            return maxMessage || (isNumberField
+                ? `Must be ${max} or less`
+                : `Must be ${max} characters or fewer`);
+        }
+
+        if (min && len < min) {
+            return minMessage || (isNumberField
+                ? `Must be at least ${min}`
+                : `Must be at least ${min} characters long`);
+        }
 
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if (isEmail && !emailRegex.test(String(value))) return "Invalid email format.";
 
         if (validate && !Array.isArray(value)) return validate(value);
-        if (compareField && fields[compareField]) {
+        if (compareField) {
+            if (!fields[compareField]) throw new Error(`FIeld ${compareField} doesn't exist in the form schema.`)
             const fieldToCompare = fields[compareField]
             if (fieldToCompare.value !== value) return `Must be equal to ${compareField}`
         }
@@ -59,13 +68,17 @@ export default function useForm(initialValues: FormFields) {
         setErrors(newErrors);
         return Object.values(newErrors).every((err) => !err);
     };
-    const onChange = ({ target: { name, value } }: React.ChangeEvent<HTMLInputElement>, customValue?: string | number) => setValue(name, customValue ?? value);
+    const onChange = ({ target: { name, value } }: React.ChangeEvent<HTMLInputElement>, customValue?: string | number) => {
+        setValue(name, customValue ?? value);
+    }
     const setValue = (fieldName: string, value: string | number) => {
         const field = fields[fieldName];
         if (field) {
             setFields((e) => ({ ...e, [fieldName]: { ...field, value } }));
-            const error = validateField(fieldName, value);
-            handleError(fieldName, error);
+            if (errors[fieldName]) {
+                const error = validateField(fieldName, value);
+                handleError(fieldName, error);
+            }
         }
     }
 

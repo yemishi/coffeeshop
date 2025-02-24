@@ -1,21 +1,36 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Signika:wght@300..700&display=swap');
+@import 'tailwindcss';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@layer base {
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+
+  body {
+    @apply text-gray-200 bg-primary font-signika font-normal md:text-lg lg:text-xl h-screen;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@theme {
+  --color-primary: oklch(19.2% 0.0068 0.85);
+  --color-primary-200: oklch(93% 0.03 73.61);
+  --color-primary-300: oklch(82.74% 0.0412 61.13);
+  --color-primary-400: oklch(58.13% 0.0584 56.05);
+  --color-primary-500: oklch(42.52% 0.0502 60.05);
+  --color-primary-550: oklch(27.54% 0.0455 59.98);
+  --color-primary-600: oklch(16.35% 0.0671 29.23);
+  --color-primary-700: oklch(26.64% 0.0181 354.63);
+  --color-primary-800: oklch(23.85% 0.01 355.76);
+  --color-primary-850: oklch(19.2% 0.0068 0.85);
+
+  --font-title: "Merienda", serif;
+  --font-signika: "Signika", serif;
+
+  --breakpoint-3xl: 120rem;
 }
