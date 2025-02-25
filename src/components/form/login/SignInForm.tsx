@@ -6,10 +6,11 @@ import { HTMLAttributes, ReactNode, useState } from "react";
 import { signIn } from "next-auth/react";
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
-    children?: ReactNode
+    children?: ReactNode;
+    resetPass?: () => void
 }
 
-export default function SignInForm({ children, ...props }: Props) {
+export default function SignInForm({ resetPass, children, ...props }: Props) {
     const { className = "", ...rest } = props
     const [isError, setIsError] = useState("")
     const inputs: InputsType = {
@@ -35,9 +36,10 @@ export default function SignInForm({ children, ...props }: Props) {
             transition={{ type: "tween" }}>
             <Form className="w-full mt-5" onSubmit={onSubmit} loadingMessage="Logging" submitMessage="Sign in" inputs={inputs} />
         </motion.span>
-        {/* to do: recover password flow */}
+
         <motion.button
             {...fadeAnimation({})}
+            onClick={resetPass}
             className="underline tracking-tighter text-primary-600 underline-offset-4 hover:text-primary-500 cursor-pointer active:text-primary-600/50 self-center"
         >
             Forgot your password?

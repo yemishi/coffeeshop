@@ -36,7 +36,7 @@ export default function Form<T>({ inputs, disabled, loadingMessage, onSubmit, is
     };
     return <form onSubmit={handleSubmit} {...rest} className={`gap-2 md:gap-3 3xl:gap-4 p-2 flex flex-col ${className}`}>
         {Object.entries(inputs).map(([name, { label, inputProps, isPassword }], i) => {
-            return <Input disabled={isLoading} key={`${name}_${i}`} label={label} isPassword={isPassword} value={values[name]}
+            return <Input className="" disabled={isLoading} key={`${name}_${i}`} label={label} isPassword={isPassword} value={values[name]}
                 error={errors[name] as string} name={name} onChange={onChange} {...inputProps} />
 
         })}

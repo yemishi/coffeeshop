@@ -20,6 +20,7 @@
     "jsonwebtoken": "^9.0.2",
     "next": "15.1.7",
     "next-auth": "^4.24.11",
+    "nodemailer": "^6.10.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-rewards": "^2.1.0"
@@ -34,6 +35,7 @@
     "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.8",
     "@types/node": "^20",
+    "@types/nodemailer": "^6.4.17",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",

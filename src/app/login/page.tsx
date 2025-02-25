@@ -5,11 +5,13 @@ import Link from "next/link";
 import { motion } from "framer-motion"
 import { lazy, useState } from "react";
 import { fadeAnimation } from "@/utils/animations";
+
 const SignUpForm = lazy(() => import("@/components/form/login/SignUpForm"))
+const ResetPassForm = lazy(() => import("@/components/form/login/ResetPassForm"))
 
 
 export default function Login() {
-  const [action, setAction] = useState<"signIn" | "signUp">("signIn")
+  const [action, setAction] = useState<"signIn" | "signUp" | "reset-pass">("signIn")
 
   return <div className="w-full md justify-center items-center h-full flex bg-primary-200 md:bg-transparent flex-col relative
 bg-cover bg-center ">
@@ -22,9 +24,9 @@ bg-cover bg-center ">
         <motion.img {...fadeAnimation({ initial: { y: "top", x: "right" } })} src="icons/favicon.svg" className="size-18" />
       </Link>
       <AnimatePresence mode="wait">
-        {action === "signIn" ? <SignInForm className="mt-auto min-h-[408px] " key="signIn" /> :
-
-          <SignUpForm className="mt-auto min-h-[408px]  " key="singUp" />
+        {action === "signIn" ? <SignInForm resetPass={() => setAction("reset-pass")} className="mt-auto min-h-[408px] " key="signIn" /> :
+          action === "signUp" ?
+            <SignUpForm className="mt-auto min-h-[408px]  " key="singUp" /> : <ResetPassForm />
         }
       </AnimatePresence>
 
@@ -40,12 +42,13 @@ bg-cover bg-center ">
               text="Don't have an account?"
               buttonText="Sign up for coffee shop"
             />
-          ) : (
+          ) : action === "signUp" ? (
             <AuthText
               action={() => setAction("signIn")}
               text="Already have an account?"
               buttonText="Sign in for coffee shop"
-            />
+            />) : (<AuthText
+              action={() => setAction("signIn")} text="Did you recover your password?" buttonText="Sign in for coffee shop" />
           )}
         </motion.div>
       </AnimatePresence>

@@ -6,22 +6,24 @@ interface PropsType extends HTMLMotionProps<"button"> {
     children?: React.ReactNode;
     isSuccess?: boolean;
     loadingMessage?: string;
+    rewardId?: string
 }
 
-export default function Button({ loadingMessage = "loading", children = "Send", isSuccess, isLoading, ...props }: PropsType) {
+export default function Button({ rewardId, loadingMessage = "loading", children = "Send", isSuccess, isLoading, ...props }: PropsType) {
     const { className = "", type = "button", ...rest } = props
     return <AnimatePresence mode="wait" >
         <motion.button key="custom-button"
+            type={type}
             disabled={isLoading}
-            className={clsx(isSuccess ? "bg-green-900 px-2 w-fit" : "bg-primary-600 px-4", className,
-                "py-2 flex overflow-hidden rounded-full justify-center  font-medium cursor-pointer self-center hover:opacity-90 active:scale-95 ")}
+            className={clsx(isSuccess ? "bg-green-900 px-2 w-fit" : `${className.includes("bg-") ? "" : "bg-primary-600"} px-4`, className,
+                className.includes("rounded") ? "" : "rounded-full ", "py-2 flex overflow-hidden justify-center font-medium cursor-pointer self-center hover:opacity-90 active:scale-95 ")}
             layout
             transition={{ duration: 0.3, ease: "easeInOut" }}
             {...rest}  >
             {isSuccess ?
                 <motion.span
                     className="inline-block size-6 p-0.5"
-                    id="successReward"
+                    id={rewardId || "successReward"}
                     key="success"
                     initial={{ y: -50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
@@ -31,7 +33,6 @@ export default function Button({ loadingMessage = "loading", children = "Send", 
                     <img src="/icons/success.svg" alt="success" />
                 </motion.span> : isLoading ? <motion.span
                     key="loading"
-
                     className="flex flex-row items-center gap-1"
                     variants={{
                         hidden: { opacity: 0, y: -50 },

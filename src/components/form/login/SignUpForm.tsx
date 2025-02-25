@@ -21,8 +21,8 @@ export default function SignUpForm({ children, ...props }: Props) {
         password: { value: "", label: "Password", isPassword: true, min: 3, inputProps: { autoComplete: "new-password" } },
         confirmPassword: { value: "", label: "Confirm Password", isPassword: true, compareField: "password", inputProps: { autoComplete: "new-password" } }
     }
+    
     const onSubmit = async (values: { email: "string", username: string, password: string }) => {
-
         if (data && !data?.error) {
             reward()
             return

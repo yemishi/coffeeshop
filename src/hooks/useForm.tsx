@@ -55,6 +55,12 @@ export default function useForm(initialValues: FormFields) {
         return null;
     };
 
+    const validate = (field: string) => {
+        const error = validateField(field, fields[field].value)
+        setErrors({ ...errors, [field]: error })
+        return !!!error
+    }
+
     const validateAll = () => {
         const newErrors: Record<string, string | null> = {};
 
@@ -85,5 +91,5 @@ export default function useForm(initialValues: FormFields) {
     const resetForm = () => { setFields(initialValues), setErrors({}) }
     const fieldsKey = useMemo(() => Object.keys(fields), [fields]);
 
-    return { fieldsKey, rawValues: fields, values, errors, onChange, validateAll, resetForm, setValue };
+    return { fieldsKey, rawValues: fields, values, errors, onChange, validateAll, resetForm, setValue, validate };
 }

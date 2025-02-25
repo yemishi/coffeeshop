@@ -20,7 +20,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                     <input
                         ref={ref}
                         id={props.id || props.name}
-                        type={isPassword ? (showPassword ? "text" : "password") : type} 
+                        type={isPassword ? (showPassword ? "text" : "password") : type}
                         className={clsx(
                             "w-full px-2.5 pt-2 pb-1 outline-none border-b-2 rounded-md transition text-black disabled:text-primary-400 placeholder:text-primary-400",
                             error ? "border-b-red-500" : "border-b-primary-500 focus:border-b-primary-400",
